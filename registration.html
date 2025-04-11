@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="css/registration.css">
+    <script src="JavaScript/auth.js" defer></script>
+</head>
+<body>
+    <div class="registration-form">
+        <h2>Registration</h2>
+        <form id="registration-form">
+            <label for="full-name">Full Name (Last name, first name, middle initial)</label>
+            <input type="text" id="full-name" name="full-name" required>
+
+            <label for="guardian-name">Guardian Name (Last name, first name, middle initial)</label>
+            <input type="text" id="guardian-name" name="guardian-name" required>
+
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="sex">Sex</label>
+            <input type="text" id="sex" name="sex" required>
+
+            <label for="lrn">LRN</label>
+            <input type="number" id="lrn" name="lrn" required>
+
+            <label for="gmail">Gmail</label>
+            <input type="email" id="gmail" name="gmail" required>
+
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" required>
+
+            <button type="submit">Register</button>
+        </form>
+        <div id="registration-error" class="error-message"></div>
+    </div>
+</body>
+</html>

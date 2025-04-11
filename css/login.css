@@ -6,6 +6,9 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-form input {
@@ -94,4 +97,19 @@
 @keyframes slideIn {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(0); }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .login-form {
+    max-width: 100%;
+    padding: 10px;
+  }
+}
+
+/* Grid layout for complex form layout */
+.login-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
 }
