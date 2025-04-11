@@ -318,3 +318,61 @@ _:-ms-input-placeholder, :root .demo-graph {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(0); }
 }
+
+/* Styles for breadcrumb navigation system */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb li + li:before {
+  content: ">";
+  margin: 0 8px;
+  color: #61dafb;
+}
+
+.breadcrumb a {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Styles for tooltips and hover effects */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #20232a;
+  color: #61dafb;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position the tooltip above the text */
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
