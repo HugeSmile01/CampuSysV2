@@ -29,7 +29,11 @@ function login(email, password) {
       const errorMessage = error.message;
       console.error("Login error:", errorCode, errorMessage);
       // Display error message to user
-      document.getElementById("login-error").innerText = errorMessage;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+      });
     });
 }
 
@@ -49,7 +53,11 @@ function register(email, password) {
       const errorMessage = error.message;
       console.error("Registration error:", errorCode, errorMessage);
       // Display error message to user
-      document.getElementById("registration-error").innerText = errorMessage;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+      });
     });
 }
 
@@ -81,7 +89,11 @@ function loginWithGoogle() {
       const errorMessage = error.message;
       console.error("Google login error:", errorCode, errorMessage);
       // Display error message to user
-      document.getElementById("login-error").innerText = errorMessage;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+      });
     });
 }
 
@@ -101,6 +113,10 @@ function loginWithFacebook() {
       const errorMessage = error.message;
       console.error("Facebook login error:", errorCode, errorMessage);
       // Display error message to user
-      document.getElementById("login-error").innerText = errorMessage;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+      });
     });
 }
