@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampuSys - Notifications</title>
+    <meta name="description" content="Campus Management System Notifications">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.png">
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .notification-unread {
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Global Loading Overlay -->
+    <div id="global-loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+            <div class="loading-spinner"></div>
+            <span class="loading-message text-gray-700 dark:text-gray-300">Loading...</span>
+        </div>
+    </div>
+
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+            <div class="flex items-center justify-center h-16 bg-primary-600 dark:bg-primary-700">
+                <div class="flex items-center">
+                    <div class="gradient-bg rounded-lg p-2">
+                        <i class="material-icons text-white text-2xl">school</i>
+                    </div>
+                    <span class="ml-2 text-xl font-bold text-white">CampuSys</span>
+                </div>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="index.html" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">dashboard</i>
+                    Dashboard
+                </a>
+                <a href="resources.html" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">library_books</i>
+                    Resources
+                </a>
+                <a href="account.html" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">account_circle</i>
+                    Account
+                </a>
+                <a href="notification.html" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-primary-600 bg-primary-50 dark:bg-primary-900 dark:text-primary-300">
+                    <i class="material-icons mr-3">notifications</i>
+                    Notifications
+                    <span class="ml-auto inline-block py-0.5 px-2 text-xs font-medium rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">3</span>
+                </a>
+            </nav>
+
+            <!-- User Profile Section -->
+            <div class="absolute bottom-0 w-full p-4">
+                <div class="flex items-center">
+                    <img class="h-8 w-8 rounded-full object-cover" src="images/user.jpg" alt="User avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300" id="user-name">Loading...</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" id="user-email">Loading...</p>
+                    </div>
+                    <button id="logout-btn" class="ml-auto p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <i class="material-icons">logout</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between px-4 py-4">
+                    <div class="flex items-center">
+                        <button id="sidebar-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="material-icons">menu</i>
+                        </button>
+                        <h1 class="ml-4 text-2xl font-semibold text-gray-900 dark:text-white">Notifications</h1>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Actions -->
+                        <button id="mark-all-read" class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 font-medium">
+                            Mark all as read
+                        </button>
+                        
+                        <!-- Theme Toggle -->
+                        <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="material-icons text-gray-700 dark:text-gray-300">dark_mode</i>
+                        </button>
+
+                        <!-- Settings -->
+                        <button class="p-2 text-gray-400 hover:text-gray-500">
+                            <i class="material-icons">settings</i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <i class="material-icons text-blue-600 dark:text-blue-400">notifications</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">24</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-red-100 dark:bg-red-900 rounded-lg">
+                                <i class="material-icons text-red-600 dark:text-red-400">notification_important</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Unread</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                                <i class="material-icons text-yellow-600 dark:text-yellow-400">schedule</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Today</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">8</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                <i class="material-icons text-green-600 dark:text-green-400">check_circle</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Read</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">21</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="mb-6">
+                    <div class="border-b border-gray-200 dark:border-gray-700">
+                        <nav class="-mb-px flex space-x-8">
+                            <button class="filter-tab border-primary-500 text-primary-600 dark:text-primary-400 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm" data-filter="all">
+                                All Notifications
+                            </button>
+                            <button class="filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm" data-filter="unread">
+                                Unread
+                            </button>
+                            <button class="filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm" data-filter="important">
+                                Important
+                            </button>
+                            <button class="filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm" data-filter="announcements">
+                                Announcements
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Notifications List -->
+                <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Notification 1 - Unread -->
+                        <div class="notification-item notification-unread p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="assignment" data-read="false">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                        <i class="material-icons text-blue-600 dark:text-blue-400">assignment</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">New Assignment Posted</h3>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">2 hours ago</span>
+                                            <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        Dr. Smith has posted a new assignment for Computer Science 101: "Binary Search Trees Implementation"
+                                    </p>
+                                    <div class="mt-2 flex items-center space-x-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                            Assignment
+                                        </span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">Due: Dec 15, 2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 2 - Unread -->
+                        <div class="notification-item notification-unread p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="grade" data-read="false">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                        <i class="material-icons text-green-600 dark:text-green-400">grade</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Grade Available</h3>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">4 hours ago</span>
+                                            <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        Your grade for Physics Lab Experiment #3 is now available. Score: 92/100
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                            Grade
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 3 - Unread -->
+                        <div class="notification-item notification-unread p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="announcement" data-read="false">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                                        <i class="material-icons text-yellow-600 dark:text-yellow-400">campaign</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Campus Event Announcement</h3>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">6 hours ago</span>
+                                            <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        Annual Science Fair will be held on December 20th, 2024. Registration is now open for all students.
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                            Announcement
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 4 - Read -->
+                        <div class="notification-item p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="reminder" data-read="true">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                                        <i class="material-icons text-purple-600 dark:text-purple-400">schedule</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Class Schedule Reminder</h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">1 day ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        Don't forget: Mathematics lecture tomorrow at 10:00 AM in Room 301.
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                                            Reminder
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 5 - Read -->
+                        <div class="notification-item p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="system" data-read="true">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                        <i class="material-icons text-gray-600 dark:text-gray-400">info</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">System Maintenance Notice</h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">2 days ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        Scheduled maintenance will occur on Sunday, December 10th from 2:00 AM to 4:00 AM EST.
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                                            System
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 6 - Read -->
+                        <div class="notification-item p-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-type="social" data-read="true">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="p-2 bg-pink-100 dark:bg-pink-900 rounded-lg">
+                                        <i class="material-icons text-pink-600 dark:text-pink-400">people</i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Study Group Invitation</h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">3 days ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                        You've been invited to join the Calculus Study Group by Sarah Johnson.
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200">
+                                            Social
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Load More -->
+                    <div class="p-6 text-center border-t border-gray-200 dark:border-gray-700">
+                        <button class="text-primary-600 hover:text-primary-800 dark:text-primary-400 font-medium text-sm">
+                            Load More Notifications
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Firebase SDK scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/config.js"></script>
+    <script src="JavaScript/auth.js"></script>
+    <script src="JavaScript/notification.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle for mobile
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-hidden');
+            });
+
+            // Filter functionality
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const notificationItems = document.querySelectorAll('.notification-item');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active tab
+                    filterTabs.forEach(t => {
+                        t.classList.remove('border-primary-500', 'text-primary-600', 'dark:text-primary-400');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                    this.classList.add('border-primary-500', 'text-primary-600', 'dark:text-primary-400');
+                    
+                    // Filter notifications
+                    notificationItems.forEach(item => {
+                        const type = item.getAttribute('data-type');
+                        const isRead = item.getAttribute('data-read') === 'true';
+                        
+                        let show = false;
+                        if (filter === 'all') {
+                            show = true;
+                        } else if (filter === 'unread') {
+                            show = !isRead;
+                        } else if (filter === 'important') {
+                            show = type === 'assignment' || type === 'grade';
+                        } else if (filter === 'announcements') {
+                            show = type === 'announcement';
+                        }
+                        
+                        item.style.display = show ? 'block' : 'none';
+                    });
+                });
+            });
+
+            // Mark notification as read on click
+            notificationItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (this.getAttribute('data-read') === 'false') {
+                        this.setAttribute('data-read', 'true');
+                        this.classList.remove('notification-unread');
+                        const indicator = this.querySelector('.w-2.h-2.bg-blue-600');
+                        if (indicator) indicator.remove();
+                        
+                        // Update unread count
+                        updateUnreadCount();
+                    }
+                });
+            });
+
+            // Mark all as read
+            document.getElementById('mark-all-read').addEventListener('click', function() {
+                notificationItems.forEach(item => {
+                    item.setAttribute('data-read', 'true');
+                    item.classList.remove('notification-unread');
+                    const indicator = item.querySelector('.w-2.h-2.bg-blue-600');
+                    if (indicator) indicator.remove();
+                });
+                updateUnreadCount();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'All notifications marked as read',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+
+            function updateUnreadCount() {
+                const unreadCount = document.querySelectorAll('.notification-item[data-read="false"]').length;
+                const badge = document.querySelector('.bg-red-100.text-red-800');
+                if (badge) {
+                    badge.textContent = unreadCount;
+                    if (unreadCount === 0) {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will be logged out of your account',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, logout'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.loadingManager.show('Logging out...');
+                        auth.signOut().then(() => {
+                            window.location.href = 'login.html';
+                        }).finally(() => {
+                            window.loadingManager.hide();
+                        });
+                    }
+                });
+            });
+
+            // Check authentication state
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    document.getElementById('user-name').textContent = user.displayName || 'User';
+                    document.getElementById('user-email').textContent = user.email;
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
