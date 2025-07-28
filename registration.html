@@ -1,138 +1,398 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <title>CampuSys - Register</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="res/material.cyan-light_blue.min.css">
-    <link rel="stylesheet" href="css/registration.css">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Global Loading Overlay -->
+    <div id="global-loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+            <div class="loading-spinner"></div>
+            <span class="loading-message text-gray-700 dark:text-gray-300">Loading...</span>
+        </div>
+    </div>
+
+    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="flex justify-center">
+                    <div class="gradient-bg rounded-full p-3 mb-4">
+                        <i class="material-icons text-white text-4xl">school</i>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Create your account
+                </h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Join CampuSys today
+                </p>
+                
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="material-icons text-gray-700 dark:text-gray-300">dark_mode</i>
+                </button>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registration-form" class="mt-8 space-y-6">
+                <div class="space-y-4">
+                    <!-- Full Name Input -->
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Full Name
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="fullName" 
+                                name="fullName" 
+                                type="text" 
+                                required 
+                                autocomplete="name"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Enter your full name"
+                            >
+                            <i class="material-icons absolute right-3 top-3 text-gray-400">person</i>
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div>
+                        <label for="gmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Email address
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="gmail" 
+                                name="gmail" 
+                                type="email" 
+                                required 
+                                autocomplete="email"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Enter your email"
+                            >
+                            <i class="material-icons absolute right-3 top-3 text-gray-400">email</i>
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                autocomplete="new-password"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Create a password"
+                            >
+                            <button type="button" id="toggle-password" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </div>
+                        <!-- Password Strength Indicator -->
+                        <div class="mt-2">
+                            <div class="password-strength bg-gray-200 dark:bg-gray-700" id="password-strength"></div>
+                            <p id="password-feedback" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Password must contain at least 8 characters, uppercase, lowercase, and number
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password Input -->
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Confirm Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="confirmPassword" 
+                                name="confirmPassword" 
+                                type="password" 
+                                required 
+                                autocomplete="new-password"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Confirm your password"
+                            >
+                            <i class="material-icons absolute right-3 top-3 text-gray-400">lock</i>
+                        </div>
+                    </div>
+
+                    <!-- Student ID Input -->
+                    <div>
+                        <label for="studentId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Student ID
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="studentId" 
+                                name="studentId" 
+                                type="text" 
+                                required 
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Enter your student ID"
+                            >
+                            <i class="material-icons absolute right-3 top-3 text-gray-400">badge</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Privacy -->
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input 
+                            id="terms" 
+                            name="terms" 
+                            type="checkbox" 
+                            required
+                            class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        >
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="terms" class="text-gray-700 dark:text-gray-300">
+                            I agree to the 
+                            <a href="#" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Terms of Service</a> 
+                            and 
+                            <a href="#" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button 
+                        type="submit" 
+                        id="register-btn"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <span id="register-text">Create Account</span>
+                        <div id="register-spinner" class="loading-spinner hidden ml-2"></div>
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Already have an account?
+                        <a href="login.html" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            Sign in
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    <!-- SweetAlert2 for user notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Material Design Lite -->
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script src="JavaScript/auth.js" defer></script>
+    <script src="js/config.js"></script>
+    <script src="JavaScript/auth.js"></script>
+
     <script>
-        // Registration form handler
         document.addEventListener('DOMContentLoaded', function() {
-            const registrationForm = document.getElementById('registration-form');
-            const emailInput = document.getElementById('gmail');
+            // Password visibility toggle
+            const togglePassword = document.getElementById('toggle-password');
             const passwordInput = document.getElementById('password');
-            
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = emailInput.value.trim();
-                    const password = passwordInput.value.trim();
-                    
-                    if (email && password) {
-                        register(email, password);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Please fill in email and password fields'
-                        });
-                    }
-                });
+            const toggleIcon = togglePassword.querySelector('i');
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                toggleIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            });
+
+            // Password strength checker
+            const strengthBar = document.getElementById('password-strength');
+            const feedbackText = document.getElementById('password-feedback');
+
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                let feedback = [];
+
+                if (password.length >= 8) strength++;
+                else feedback.push('at least 8 characters');
+
+                if (/[a-z]/.test(password)) strength++;
+                else feedback.push('lowercase letter');
+
+                if (/[A-Z]/.test(password)) strength++;
+                else feedback.push('uppercase letter');
+
+                if (/[0-9]/.test(password)) strength++;
+                else feedback.push('number');
+
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                // Update visual feedback
+                const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-green-600'];
+                const widths = ['w-1/5', 'w-2/5', 'w-3/5', 'w-4/5', 'w-full'];
+                
+                strengthBar.className = `password-strength ${colors[strength - 1] || 'bg-gray-200'} ${widths[strength - 1] || 'w-0'}`;
+                
+                if (feedback.length > 0) {
+                    feedbackText.textContent = `Password needs: ${feedback.join(', ')}`;
+                    feedbackText.className = 'text-xs text-red-500 mt-1';
+                } else {
+                    feedbackText.textContent = 'Strong password!';
+                    feedbackText.className = 'text-xs text-green-500 mt-1';
+                }
+
+                return strength >= 4;
             }
+
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+
+            // Registration form handler
+            const registrationForm = document.getElementById('registration-form');
+            const registerBtn = document.getElementById('register-btn');
+            const registerText = document.getElementById('register-text');
+            const registerSpinner = document.getElementById('register-spinner');
+            const emailInput = document.getElementById('gmail');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const fullNameInput = document.getElementById('fullName');
+            const studentIdInput = document.getElementById('studentId');
+            const termsCheckbox = document.getElementById('terms');
+
+            registrationForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
+                const fullName = fullNameInput.value.trim();
+                const studentId = studentIdInput.value.trim();
+
+                // Validation
+                if (!fullName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Full Name Required',
+                        text: 'Please enter your full name'
+                    });
+                    return;
+                }
+
+                if (!window.security.validateEmail(email)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Email',
+                        text: 'Please enter a valid email address'
+                    });
+                    return;
+                }
+
+                if (!window.security.validatePassword(password)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Weak Password',
+                        text: 'Password must be at least 8 characters with uppercase, lowercase, and number'
+                    });
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Mismatch',
+                        text: 'Passwords do not match'
+                    });
+                    return;
+                }
+
+                if (!studentId) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Student ID Required',
+                        text: 'Please enter your student ID'
+                    });
+                    return;
+                }
+
+                if (!termsCheckbox.checked) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terms Required',
+                        text: 'Please accept the terms and conditions'
+                    });
+                    return;
+                }
+
+                // Show loading state
+                registerBtn.disabled = true;
+                registerText.textContent = 'Creating Account...';
+                registerSpinner.classList.remove('hidden');
+                window.loadingManager.show('Creating your account...');
+
+                try {
+                    await register(email, password);
+                } catch (error) {
+                    console.error('Registration error:', error);
+                } finally {
+                    // Reset button state
+                    registerBtn.disabled = false;
+                    registerText.textContent = 'Create Account';
+                    registerSpinner.classList.add('hidden');
+                    window.loadingManager.hide();
+                }
+            });
         });
     </script>
-</head>
-<body style="background-color: #20232a; color: #61dafb;">
-    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-      <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">Registration</span>
-          <div class="mdl-layout-spacer"></div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search">
-              <label class="mdl-textfield__label" for="search">Enter your query...</label>
-            </div>
-          </div>
-          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-            <i class="material-icons">more_vert</i>
-          </button>
-          <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-            <li class="mdl-menu__item">About</li>
-            <li class="mdl-menu__item">Contact</li>
-            <li class="mdl-menu__item">Legal information</li>
-          </ul>
-        </div>
-      </header>
-      <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
-        <header class="demo-drawer-header">
-          <img src="images/user.jpg" class="demo-avatar">
-          <div class="demo-avatar-dropdown">
-            <span>hello@example.com</span>
-            <div class="mdl-layout-spacer"></div>
-            <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-              <i class="material-icons" role="presentation">arrow_drop_down</i>
-              <span class="visuallyhidden">Accounts</span>
-            </button>
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-              <li class="mdl-menu__item">hello@example.com</li>
-              <li class="mdl-menu__item">info@example.com</li>
-              <li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
-            </ul>
-          </div>
-        </header>
-        <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link" href="index.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
-          <a class="mdl-navigation__link" href="resources.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">library_books</i>Resources</a>
-          <a class="mdl-navigation__link" href="account.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">account_circle</i>Account</a>
-          <a class="mdl-navigation__link" href="notification.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">notifications</i>Notifications</a>
-          <a class="mdl-navigation__link" href="login.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">login</i>Login</a>
-          <a class="mdl-navigation__link" href="registration.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">person_add</i>Registration</a>
-          <div class="mdl-layout-spacer"></div>
-          <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
-        </nav>
-      </div>
-      <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid demo-content">
-          <div class="registration-form">
-            <h2>Registration</h2>
-            <form id="registration-form">
-                <label for="full-name">Full Name (Last name, first name, middle initial)</label>
-                <input type="text" id="full-name" name="full-name" required>
-
-                <label for="guardian-name">Guardian Name (Last name, first name, middle initial)</label>
-                <input type="text" id="guardian-name" name="guardian-name" required>
-
-                <label for="age">Age</label>
-                <input type="number" id="age" name="age" required>
-
-                <label for="sex">Sex</label>
-                <input type="text" id="sex" name="sex" required>
-
-                <label for="lrn">LRN</label>
-                <input type="number" id="lrn" name="lrn" required>
-
-                <label for="gmail">Gmail</label>
-                <input type="email" id="gmail" name="gmail" required>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location" required>
-
-                <button type="submit">Register</button>
-            </form>
-            <div id="registration-error" class="error-message"></div>
-          </div>
-        </div>
-      </main>
-    </div>
 </body>
 </html>
+

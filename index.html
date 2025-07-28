@@ -1,257 +1,371 @@
-<!doctype html>
-<!--
-  Material Design Lite
-  Copyright 2015 Google Inc. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      https://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License
--->
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Material Design Lite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampuSys - Dashboard</title>
+    <meta name="description" content="Campus Management System Dashboard">
 
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
-
+    <!-- Favicon -->
     <link rel="shortcut icon" href="images/favicon.png">
-
-    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
-    <!--
-    <link rel="canonical" href="http://www.example.com/">
-    -->
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="res/material.cyan-light_blue.min.css">
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
     </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Global Loading Overlay -->
+    <div id="global-loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+            <div class="loading-spinner"></div>
+            <span class="loading-message text-gray-700 dark:text-gray-300">Loading...</span>
+        </div>
+    </div>
+
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+            <div class="flex items-center justify-center h-16 bg-primary-600 dark:bg-primary-700">
+                <div class="flex items-center">
+                    <div class="gradient-bg rounded-lg p-2">
+                        <i class="material-icons text-white text-2xl">school</i>
+                    </div>
+                    <span class="ml-2 text-xl font-bold text-white">CampuSys</span>
+                </div>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="#" data-route="/" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-primary-600 bg-primary-50 dark:bg-primary-900 dark:text-primary-300">
+                    <i class="material-icons mr-3">dashboard</i>
+                    Dashboard
+                </a>
+                <a href="#" data-route="/resources" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">library_books</i>
+                    Resources
+                </a>
+                <a href="#" data-route="/account" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">account_circle</i>
+                    Account
+                </a>
+                <a href="#" data-route="/notifications" class="nav-link group flex items-center px-2 py-2 mt-1 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
+                    <i class="material-icons mr-3">notifications</i>
+                    Notifications
+                    <span class="ml-auto inline-block py-0.5 px-2 text-xs font-medium rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">3</span>
+                </a>
+            </nav>
+
+            <!-- User Profile Section -->
+            <div class="absolute bottom-0 w-full p-4">
+                <div class="flex items-center">
+                    <img class="h-8 w-8 rounded-full object-cover" src="images/user.jpg" alt="User avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300" id="user-name">Loading...</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" id="user-email">Loading...</p>
+                    </div>
+                    <button id="logout-btn" class="ml-auto p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <i class="material-icons">logout</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between px-4 py-4">
+                    <div class="flex items-center">
+                        <button id="sidebar-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="material-icons">menu</i>
+                        </button>
+                        <h1 class="ml-4 text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Search -->
+                        <div class="relative">
+                            <input type="text" placeholder="Search..." class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                            <i class="material-icons absolute left-3 top-2.5 text-gray-400">search</i>
+                        </div>
+                        
+                        <!-- Theme Toggle -->
+                        <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="material-icons text-gray-700 dark:text-gray-300">dark_mode</i>
+                        </button>
+
+                        <!-- Notifications -->
+                        <button class="relative p-2 text-gray-400 hover:text-gray-500">
+                            <i class="material-icons">notifications</i>
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white dark:ring-gray-800"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <i class="material-icons text-blue-600 dark:text-blue-400">school</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Courses</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">12</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                <i class="material-icons text-green-600 dark:text-green-400">assignment_turned_in</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Completed</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">8</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                                <i class="material-icons text-yellow-600 dark:text-yellow-400">schedule</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">4</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                                <i class="material-icons text-purple-600 dark:text-purple-400">grade</i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Average Grade</p>
+                                <p class="text-2xl font-semibold text-gray-900 dark:text-white">3.8</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Progress Chart -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Course Progress</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600 dark:text-gray-400">Mathematics</span>
+                                    <span class="text-gray-900 dark:text-white">85%</span>
+                                </div>
+                                <div class="mt-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600 dark:text-gray-400">Computer Science</span>
+                                    <span class="text-gray-900 dark:text-white">92%</span>
+                                </div>
+                                <div class="mt-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600 dark:text-gray-400">Physics</span>
+                                    <span class="text-gray-900 dark:text-white">78%</span>
+                                </div>
+                                <div class="mt-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-yellow-600 h-2 rounded-full" style="width: 78%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Activity</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                    <i class="material-icons text-blue-600 dark:text-blue-400 text-sm">assignment</i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Assignment submitted</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Mathematics - 2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                    <i class="material-icons text-green-600 dark:text-green-400 text-sm">grade</i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Grade received</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Physics Lab - A grade</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                                    <i class="material-icons text-yellow-600 dark:text-yellow-400 text-sm">schedule</i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Upcoming deadline</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">CS Project - Due tomorrow</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <i class="material-icons text-gray-600 dark:text-gray-400 mr-2">add</i>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">New Assignment</span>
+                        </button>
+                        <button class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <i class="material-icons text-gray-600 dark:text-gray-400 mr-2">calendar_today</i>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">View Schedule</span>
+                        </button>
+                        <button class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <i class="material-icons text-gray-600 dark:text-gray-400 mr-2">message</i>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Messages</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <!-- Firebase SDK scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/config.js"></script>
     <script src="JavaScript/auth.js"></script>
     <script src="JavaScript/homepage.js"></script>
-    <script src="JavaScript/resources.js"></script>
-    <script src="JavaScript/account.js"></script>
-    <script src="JavaScript/notification.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
-  <body style="background-color: #20232a; color: #61dafb;">
-    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-      <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">Home</span>
-          <div class="mdl-layout-spacer"></div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search">
-              <label class="mdl-textfield__label" for="search">Enter your query...</label>
-            </div>
-          </div>
-          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-            <i class="material-icons">more_vert</i>
-          </button>
-          <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-            <li class="mdl-menu__item">About</li>
-            <li class="mdl-menu__item">Contact</li>
-            <li class="mdl-menu__item">Legal information</li>
-          </ul>
-        </div>
-      </header>
-      <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
-        <header class="demo-drawer-header">
-          <img src="images/user.jpg" class="demo-avatar">
-          <div class="demo-avatar-dropdown">
-            <span>hello@example.com</span>
-            <div class="mdl-layout-spacer"></div>
-            <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-              <i class="material-icons" role="presentation">arrow_drop_down</i>
-              <span class="visuallyhidden">Accounts</span>
-            </button>
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-              <li class="mdl-menu__item">hello@example.com</li>
-              <li class="mdl-menu__item">info@example.com</li>
-              <li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
-            </ul>
-          </div>
-        </header>
-        <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link" href="index.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
-          <a class="mdl-navigation__link" href="resources.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">library_books</i>Resources</a>
-          <a class="mdl-navigation__link" href="account.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">account_circle</i>Account</a>
-          <a class="mdl-navigation__link" href="notification.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">notifications</i>Notifications</a>
-          <a class="mdl-navigation__link" href="login.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">login</i>Login</a>
-          <a class="mdl-navigation__link" href="registration.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">person_add</i>Registration</a>
-          <div class="mdl-layout-spacer"></div>
-          <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
-        </nav>
-      </div>
-      <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid demo-content">
-          <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-            <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
-              <use xlink:href="#piechart" mask="url(#piemask)" />
-              <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan font-size="0.2" dy="-0.07">%</tspan></text>
-            </svg>
-            <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
-              <use xlink:href="#piechart" mask="url(#piemask)" />
-              <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
-            </svg>
-            <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
-              <use xlink:href="#piechart" mask="url(#piemask)" />
-              <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
-            </svg>
-            <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
-              <use xlink:href="#piechart" mask="url(#piemask)" />
-              <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
-            </svg>
-          </div>
-          <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
-            <svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
-              <use xlink:href="#chart" />
-            </svg>
-            <svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
-              <use xlink:href="#chart" />
-            </svg>
-          </div>
-          <div class="demo-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
-            <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
-              <div class="mdl-card__title mdl-card--expand mdl-color--teal-300">
-                <h2 class="mdl-card__title-text">Updates</h2>
-              </div>
-              <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-                Non dolore elit adipisicing ea reprehenderit consectetur culpa.
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">Read More</a>
-              </div>
-            </div>
-            <div class="demo-separator mdl-cell--1-col"></div>
-            <div class="demo-options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
-              <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
-                <h3>View options</h3>
-                <ul>
-                  <li>
-                    <label for="chkbox1" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-                      <input type="checkbox" id="chkbox1" class="mdl-checkbox__input">
-                      <span class="mdl-checkbox__label">Click per object</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label for="chkbox2" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-                      <input type="checkbox" id="chkbox2" class="mdl-checkbox__input">
-                      <span class="mdl-checkbox__label">Views per object</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label for="chkbox3" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-                      <input type="checkbox" id="chkbox3" class="mdl-checkbox__input">
-                      <span class="mdl-checkbox__label">Objects selected</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label for="chkbox4" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-                      <input type="checkbox" id="chkbox4" class="mdl-checkbox__input">
-                      <span class="mdl-checkbox__label">Objects viewed</span>
-                    </label>
-                  </li>
-                </ul>
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">Change location</a>
-                <div class="mdl-layout-spacer"></div>
-                <i class="material-icons">location_on</i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="position: fixed; left: -1000px; height: -1000px;">
-        <defs>
-          <mask id="piemask" maskContentUnits="objectBoundingBox">
-            <circle cx=0.5 cy=0.5 r=0.49 fill="white" />
-            <circle cx=0.5 cy=0.5 r=0.40 fill="black" />
-          </mask>
-          <g id="piechart">
-            <circle cx=0.5 cy=0.5 r=0.5 />
-            <path d="M 0.5 0.5 0.5 0 A 0.5 0.5 0 0 1 0.95 0.28 z" stroke="none" fill="rgba(255, 255, 255, 0.75)" />
-          </g>
-        </defs>
-      </svg>
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 250" style="position: fixed; left: -1000px; height: -1000px;">
-        <defs>
-          <g id="chart">
-            <g id="Gridlines">
-              <line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="27.3" x2="468.3" y2="27.3" />
-              <line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="66.7" x2="468.3" y2="66.7" />
-              <line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="105.3" x2="468.3" y2="105.3" />
-              <line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="144.7" x2="468.3" y2="144.7" />
-              <line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="184.3" x2="468.3" y2="184.3" />
-            </g>
-            <g id="Numbers">
-              <text transform="matrix(1 0 0 1 485 29.3333)" fill="#888888" font-family="'Roboto'" font-size="9">500</text>
-              <text transform="matrix(1 0 0 1 485 69)" fill="#888888" font-family="'Roboto'" font-size="9">400</text>
-              <text transform="matrix(1 0 0 1 485 109.3333)" fill="#888888" font-family="'Roboto'" font-size="9">300</text>
-              <text transform="matrix(1 0 0 1 485 149)" fill="#888888" font-family="'Roboto'" font-size="9">200</text>
-              <text transform="matrix(1 0 0 1 485 188.3333)" fill="#888888" font-family="'Roboto'" font-size="9">100</text>
-              <text transform="matrix(1 0 0 1 0 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">1</text>
-              <text transform="matrix(1 0 0 1 78 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">2</text>
-              <text transform="matrix(1 0 0 1 154.6667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">3</text>
-              <text transform="matrix(1 0 0 1 232.1667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">4</text>
-              <text transform="matrix(1 0 0 1 309 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">5</text>
-              <text transform="matrix(1 0 0 1 386.6667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">6</text>
-              <text transform="matrix(1 0 0 1 464.3333 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">7</text>
-            </g>
-            <g id="Layer_5">
-              <polygon opacity="0.36" stroke-miterlimit="10" points="0,223.3 48,138.5 154.7,169 211,88.5
-              294.5,80.5 380,165.2 437,75.5 469.5,223.3 	"/>
-            </g>
-            <g id="Layer_4">
-              <polygon stroke-miterlimit="10" points="469.3,222.7 1,222.7 48.7,166.7 155.7,188.3 212,132.7
-              296.7,128 380.7,184.3 436.7,125 	"/>
-            </g>
-          </g>
-        </defs>
-      </svg>
-      <a href="https://github.com/google/material-design-lite/blob/mdl-1.x/templates/dashboard/" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white">View Source</a>
-    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-  </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle for mobile
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-hidden');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                    sidebar.classList.add('sidebar-hidden');
+                }
+            });
+
+            // Navigation handling
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('text-primary-600', 'bg-primary-50', 'dark:bg-primary-900', 'dark:text-primary-300'));
+                    navLinks.forEach(l => l.classList.add('text-gray-600', 'dark:text-gray-300'));
+                    
+                    // Add active class to clicked link
+                    this.classList.remove('text-gray-600', 'dark:text-gray-300');
+                    this.classList.add('text-primary-600', 'bg-primary-50', 'dark:bg-primary-900', 'dark:text-primary-300');
+                });
+            });
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will be logged out of your account',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, logout'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.loadingManager.show('Logging out...');
+                        auth.signOut().then(() => {
+                            window.location.href = 'login.html';
+                        }).finally(() => {
+                            window.loadingManager.hide();
+                        });
+                    }
+                });
+            });
+
+            // Check authentication state
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    document.getElementById('user-name').textContent = user.displayName || 'User';
+                    document.getElementById('user-email').textContent = user.email;
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
 </html>

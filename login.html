@@ -1,115 +1,291 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <title>CampuSys - Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="res/material.cyan-light_blue.min.css">
-    <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body style="background-color: #20232a; color: #61dafb;">
-    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-      <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">Login</span>
-          <div class="mdl-layout-spacer"></div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search">
-              <label class="mdl-textfield__label" for="search">Enter your query...</label>
-            </div>
-          </div>
-          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-            <i class="material-icons">more_vert</i>
-          </button>
-          <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-            <li class="mdl-menu__item">About</li>
-            <li class="mdl-menu__item">Contact</li>
-            <li class="mdl-menu__item">Legal information</li>
-          </ul>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Global Loading Overlay -->
+    <div id="global-loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+            <div class="loading-spinner"></div>
+            <span class="loading-message text-gray-700 dark:text-gray-300">Loading...</span>
         </div>
-      </header>
-      <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
-        <header class="demo-drawer-header">
-          <img src="images/user.jpg" class="demo-avatar">
-          <div class="demo-avatar-dropdown">
-            <span>hello@example.com</span>
-            <div class="mdl-layout-spacer"></div>
-            <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-              <i class="material-icons" role="presentation">arrow_drop_down</i>
-              <span class="visuallyhidden">Accounts</span>
-            </button>
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-              <li class="mdl-menu__item">hello@example.com</li>
-              <li class="mdl-menu__item">info@example.com</li>
-              <li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
-            </ul>
-          </div>
-        </header>
-        <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link" href="index.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
-          <a class="mdl-navigation__link" href="resources.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">library_books</i>Resources</a>
-          <a class="mdl-navigation__link" href="account.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">account_circle</i>Account</a>
-          <a class="mdl-navigation__link" href="notification.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">notifications</i>Notifications</a>
-          <a class="mdl-navigation__link" href="login.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">login</i>Login</a>
-          <a class="mdl-navigation__link" href="registration.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">person_add</i>Registration</a>
-          <div class="mdl-layout-spacer"></div>
-          <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
-        </nav>
-      </div>
-      <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid demo-content">
-          <div class="login-form">
-            <h2>Login</h2>
-            <form id="login-form">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <div id="login-error" class="error-message"></div>
-            </form>
-          </div>
-        </div>
-      </main>
     </div>
+
+    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="flex justify-center">
+                    <div class="gradient-bg rounded-full p-3 mb-4">
+                        <i class="material-icons text-white text-4xl">school</i>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Welcome back
+                </h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Sign in to your CampuSys account
+                </p>
+                
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="material-icons text-gray-700 dark:text-gray-300">dark_mode</i>
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="mt-8 space-y-6">
+                <div class="space-y-4">
+                    <!-- Email Input -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Email address
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="email" 
+                                name="email" 
+                                type="email" 
+                                required 
+                                autocomplete="email"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Enter your email"
+                            >
+                            <i class="material-icons absolute right-3 top-3 text-gray-400">email</i>
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                autocomplete="current-password"
+                                class="appearance-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 transition-colors"
+                                placeholder="Enter your password"
+                            >
+                            <button type="button" id="toggle-password" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remember me and Forgot password -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            id="remember-me" 
+                            name="remember-me" 
+                            type="checkbox" 
+                            class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        >
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            Forgot password?
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button 
+                        type="submit" 
+                        id="login-btn"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <span id="login-text">Sign in</span>
+                        <div id="login-spinner" class="loading-spinner hidden ml-2"></div>
+                    </button>
+                </div>
+
+                <!-- Social Login -->
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <button 
+                            type="button" 
+                            id="google-login"
+                            class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            <span class="ml-2">Google</span>
+                        </button>
+
+                        <button 
+                            type="button" 
+                            id="facebook-login"
+                            class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            <span class="ml-2">Facebook</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Register Link -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Don't have an account?
+                        <a href="registration.html" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            Sign up
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    <!-- SweetAlert2 for user notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Material Design Lite -->
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="js/config.js"></script>
     <script src="JavaScript/auth.js"></script>
+
     <script>
-        // Login form handler
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('login-form');
-            const emailInput = document.getElementById('email');
+            // Password visibility toggle
+            const togglePassword = document.getElementById('toggle-password');
             const passwordInput = document.getElementById('password');
-            
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = emailInput.value.trim();
-                    const password = passwordInput.value.trim();
-                    
-                    if (email && password) {
-                        login(email, password);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Please fill in all fields'
-                        });
-                    }
-                });
-            }
+            const toggleIcon = togglePassword.querySelector('i');
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                toggleIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            });
+
+            // Login form handler
+            const loginForm = document.getElementById('login-form');
+            const loginBtn = document.getElementById('login-btn');
+            const loginText = document.getElementById('login-text');
+            const loginSpinner = document.getElementById('login-spinner');
+            const emailInput = document.getElementById('email');
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                // Validation
+                if (!window.security.validateEmail(email)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Email',
+                        text: 'Please enter a valid email address'
+                    });
+                    return;
+                }
+
+                if (!password) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Required',
+                        text: 'Please enter your password'
+                    });
+                    return;
+                }
+
+                // Show loading state
+                loginBtn.disabled = true;
+                loginText.textContent = 'Signing in...';
+                loginSpinner.classList.remove('hidden');
+                window.loadingManager.show('Authenticating...');
+
+                try {
+                    await login(email, password);
+                } catch (error) {
+                    console.error('Login error:', error);
+                } finally {
+                    // Reset button state
+                    loginBtn.disabled = false;
+                    loginText.textContent = 'Sign in';
+                    loginSpinner.classList.add('hidden');
+                    window.loadingManager.hide();
+                }
+            });
+
+            // Social login handlers
+            document.getElementById('google-login').addEventListener('click', function() {
+                window.loadingManager.show('Connecting to Google...');
+                loginWithGoogle().finally(() => window.loadingManager.hide());
+            });
+
+            document.getElementById('facebook-login').addEventListener('click', function() {
+                window.loadingManager.show('Connecting to Facebook...');
+                loginWithFacebook().finally(() => window.loadingManager.hide());
+            });
         });
     </script>
 </body>
