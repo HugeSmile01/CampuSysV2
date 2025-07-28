@@ -4,8 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="res/material.cyan-light_blue.min.css">
     <link rel="stylesheet" href="css/registration.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDK scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <!-- SweetAlert2 for user notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Material Design Lite -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="JavaScript/auth.js" defer></script>
+    <script>
+        // Registration form handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const registrationForm = document.getElementById('registration-form');
+            const emailInput = document.getElementById('gmail');
+            const passwordInput = document.getElementById('password');
+            
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = emailInput.value.trim();
+                    const password = passwordInput.value.trim();
+                    
+                    if (email && password) {
+                        register(email, password);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please fill in email and password fields'
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 <body style="background-color: #20232a; color: #61dafb;">
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
@@ -82,6 +120,9 @@
 
                 <label for="gmail">Gmail</label>
                 <input type="email" id="gmail" name="gmail" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
 
                 <label for="location">Location</label>
                 <input type="text" id="location" name="location" required>
